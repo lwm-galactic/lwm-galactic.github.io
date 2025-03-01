@@ -17,9 +17,9 @@ div#menus {
 
 h1#site-title {
     font-family: ZhuZiAYuanJWD;
-    font-size: 12em !important;
+    font-size: 8em !important;
     -webkit-text-stroke: 1px rgb(241, 241, 241); /* 添加黑色边框 */
-    margin: 0;
+
 }
 
 a.article-title,
