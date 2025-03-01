@@ -17,7 +17,7 @@ div#menus {
 
 h1#site-title {
     font-family: ZhuZiAYuanJWD;
-    font-size: 3em !important;
+    font-size: 8em !important;
 }
 
 a.article-title,
@@ -197,7 +197,7 @@ div#category {
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #3b70fc;
+    background-color: #e6e9f1;
     border-radius: 2em;
 }
 
@@ -207,7 +207,7 @@ div#category {
 
 ::-moz-selection {
     color: #fff;
-    background-color: #3b70fc;
+    background-color: #e6e9f1;
 }
 
 /* 音乐播放器 */
