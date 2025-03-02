@@ -1,0 +1,14 @@
+.card-info-btn {
+    transition: all 0.3s ease !important
+    /* 添加平滑过渡效果 */
+}
+
+.card-info-btn:hover {
+    background-color: #578fd8 !important;
+    /* 鼠标移入时的背景颜色 */
+
+    transform: scale(1.05) !important;
+    /* 可选：放大按钮 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+    /* 可选：添加阴影效果 */
+}
