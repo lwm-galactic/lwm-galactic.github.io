@@ -1,0 +1,618 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>ai-agent 文本预处理 | 欢迎来到lwm的小站</title><meta name="author" content="lwm"><meta name="copyright" content="lwm"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="向量化前文本预处理为什么要对文本进行预处理在进行文本向量化（如使用 BERT、Sentence-BERT、Word2Vec、TF-IDF 等模型）之前，对文本进行预处理 是非常关键的一步。这是因为原始文本通常包含很多“噪声”或不利于模型理解的内容，如果不经过清洗和标准化，会直接影响后续任务的效果。  ✅ 一、为什么要对文本进行预处理？核心原因如下： 1. 去除噪声，提高语义准确性 原始文本中可能包">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ai-agent 文本预处理">
+<meta property="og:url" content="http://example.com/posts/d690a2ae.html">
+<meta property="og:site_name" content="欢迎来到lwm的小站">
+<meta property="og:description" content="向量化前文本预处理为什么要对文本进行预处理在进行文本向量化（如使用 BERT、Sentence-BERT、Word2Vec、TF-IDF 等模型）之前，对文本进行预处理 是非常关键的一步。这是因为原始文本通常包含很多“噪声”或不利于模型理解的内容，如果不经过清洗和标准化，会直接影响后续任务的效果。  ✅ 一、为什么要对文本进行预处理？核心原因如下： 1. 去除噪声，提高语义准确性 原始文本中可能包">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/icon.jpg">
+<meta property="article:published_time" content="2025-05-06T12:56:56.000Z">
+<meta property="article:modified_time" content="2025-05-06T13:48:12.942Z">
+<meta property="article:author" content="lwm">
+<meta property="article:tag" content="agent">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/icon.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "ai-agent 文本预处理",
+  "url": "http://example.com/posts/d690a2ae.html",
+  "image": "http://example.com/img/icon.jpg",
+  "datePublished": "2025-05-06T12:56:56.000Z",
+  "dateModified": "2025-05-06T13:48:12.942Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "lwm",
+      "url": "http://example.com/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/title.png"><link rel="canonical" href="http://example.com/posts/d690a2ae.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":"ture"},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'ai-agent 文本预处理',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/aside.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/tag.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/custom.css" media="defer" onload="this.media='all'"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://unpkg.zhimg.com/hexo-butterfly-footer-beautify@1.0.0/lib/runtime.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.cbd.int/hexo-butterfly-wowjs/lib/animate.min.css" media="print" onload="this.media='screen'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/background.png);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/icon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fas fa-envelope"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-history"></i><span> 时光机</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tag"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-layer-group"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">欢迎来到lwm的小站</span></a><a class="nav-page-title" href="/"><span class="site-name">ai-agent 文本预处理</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fas fa-envelope"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-history"></i><span> 时光机</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tag"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-layer-group"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">ai-agent 文本预处理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-05-06T12:56:56.000Z" title="发表于 2025-05-06 20:56:56">2025-05-06</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-05-06T13:48:12.942Z" title="更新于 2025-05-06 21:48:12">2025-05-06</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="向量化前文本预处理"><a href="#向量化前文本预处理" class="headerlink" title="向量化前文本预处理"></a>向量化前文本预处理</h1><h2 id="为什么要对文本进行预处理"><a href="#为什么要对文本进行预处理" class="headerlink" title="为什么要对文本进行预处理"></a>为什么要对文本进行预处理</h2><p>在进行文本向量化（如使用 BERT、Sentence-BERT、Word2Vec、TF-IDF 等模型）之前，<strong>对文本进行预处理</strong> 是非常关键的一步。这是因为原始文本通常包含很多“噪声”或不利于模型理解的内容，如果不经过清洗和标准化，会直接影响后续任务的效果。</p>
+<hr>
+<h3 id="✅-一、为什么要对文本进行预处理？核心原因如下："><a href="#✅-一、为什么要对文本进行预处理？核心原因如下：" class="headerlink" title="✅ 一、为什么要对文本进行预处理？核心原因如下："></a>✅ 一、为什么要对文本进行预处理？核心原因如下：</h3><hr>
+<h4 id="1-去除噪声，提高语义准确性"><a href="#1-去除噪声，提高语义准确性" class="headerlink" title="1. 去除噪声，提高语义准确性"></a>1. <strong>去除噪声，提高语义准确性</strong></h4><ul>
+<li>原始文本中可能包含无意义字符、特殊符号、HTML标签、乱码等。</li>
+<li>这些内容会对模型造成干扰，影响词向量的质量。</li>
+</ul>
+<p>🔹 示例：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;Hello! This is a test... &lt;br&gt; \n\n \x00\x01&quot;</span><br></pre></td></tr></table></figure>
+
+<p>→ 清洗后：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;Hello! This is a test.&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h4 id="2-统一格式，提升一致性"><a href="#2-统一格式，提升一致性" class="headerlink" title="2. 统一格式，提升一致性"></a>2. <strong>统一格式，提升一致性</strong></h4><ul>
+<li>不同来源的文本格式不一致（大小写、标点、空格、缩进等），会影响模型识别相似性。</li>
+</ul>
+<p>🔹 示例：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;AI is changing the world.&quot; vs &quot;ai IS changing THE world.&quot;</span><br></pre></td></tr></table></figure>
+
+<p>→ 预处理后可以统一为小写，帮助模型识别它们是语义相近的句子。</p>
+<h3 id="🧼-二、常见的文本预处理步骤"><a href="#🧼-二、常见的文本预处理步骤" class="headerlink" title="🧼 二、常见的文本预处理步骤"></a>🧼 二、常见的文本预处理步骤</h3><table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>描述</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>1. 清洗文本</strong></td>
+<td>删除 HTML 标签、特殊符号、换行符、不可见字符等</td>
+<td><code>&lt;p&gt;Hello&lt;/p&gt;</code>→<code>Hello</code></td>
+</tr>
+<tr>
+<td><strong>2. 分句 &#x2F; 分词</strong></td>
+<td>将文本切分为句子或词语（英文按空格，中文需分词）</td>
+<td><code>我爱自然语言处理</code>→<code>[&quot;我&quot;, &quot;爱&quot;, &quot;自然语言&quot;, &quot;处理&quot;]</code></td>
+</tr>
+<tr>
+<td><strong>3. 统一大小写</strong></td>
+<td>英文转为小写</td>
+<td><code>&quot;This IS a Test&quot;</code>→<code>&quot;this is a test&quot;</code></td>
+</tr>
+<tr>
+<td><strong>4. 去除数字 &#x2F; 特殊字符</strong></td>
+<td>可选地移除纯数字或非语义字符</td>
+<td><code>&quot;Price: $100&quot;</code>→<code>&quot;Price&quot;</code></td>
+</tr>
+<tr>
+<td><strong>5. 控制长度</strong></td>
+<td>截断或填充文本以适应模型最大长度限制</td>
+<td><code>超过512token则截断</code></td>
+</tr>
+</tbody></table>
+<h3 id="📈-三、预处理对下游任务的影响"><a href="#📈-三、预处理对下游任务的影响" class="headerlink" title="📈 三、预处理对下游任务的影响"></a>📈 三、预处理对下游任务的影响</h3><table>
+<thead>
+<tr>
+<th>任务</th>
+<th>影响程度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>文本分类</strong></td>
+<td>高：准确率依赖语义清晰度</td>
+</tr>
+<tr>
+<td><strong>相似度匹配</strong></td>
+<td>高：语义一致性决定结果质量</td>
+</tr>
+<tr>
+<td><strong>问答系统</strong></td>
+<td>高：上下文连贯性至关重要</td>
+</tr>
+<tr>
+<td><strong>摘要生成</strong></td>
+<td>中高：信息完整性依赖预处理效果</td>
+</tr>
+<tr>
+<td><strong>关键词提取</strong></td>
+<td>中：去噪和停用词过滤直接影响关键词准确性</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="✅-总结一句话："><a href="#✅-总结一句话：" class="headerlink" title="✅ 总结一句话："></a>✅ 总结一句话：</h3><blockquote>
+<p><strong>文本预处理是为了让模型“看得更清楚”，从而“理解得更准确”。它是高质量向量化和智能应用的基础。</strong> </p>
+</blockquote>
+<h2 id="文本处理的两个重要概念"><a href="#文本处理的两个重要概念" class="headerlink" title="文本处理的两个重要概念"></a>文本处理的两个重要概念</h2><h3 id="🧩-一、chunksize：块大小（Chunk-Size）"><a href="#🧩-一、chunksize：块大小（Chunk-Size）" class="headerlink" title="🧩 一、chunksize：块大小（Chunk Size）"></a>🧩 一、<code>chunksize</code>：块大小（Chunk Size）</h3><h4 id="✅-定义："><a href="#✅-定义：" class="headerlink" title="✅ 定义："></a>✅ 定义：</h4><ul>
+<li><code>chunksize</code> 是指每个文本切片（chunk）中包含的最大 <strong>token 数量</strong> （不是字符数或句子数量）。</li>
+<li>在向量化（embedding）、检索增强生成（RAG）、上下文窗口等场景中非常关键。</li>
+</ul>
+<hr>
+<h4 id="🔒-限制因素："><a href="#🔒-限制因素：" class="headerlink" title="🔒 限制因素："></a>🔒 限制因素：</h4><ol>
+<li><h5 id="Embedding-模型最大输入长度"><a href="#Embedding-模型最大输入长度" class="headerlink" title="Embedding 模型最大输入长度"></a><strong>Embedding 模型最大输入长度</strong></h5></li>
+</ol>
+<ul>
+<li>不同 embedding 模型对输入长度有上限。例如：<ul>
+<li><code>all-MiniLM-L6-v2</code>: 最大长度为 256 tokens</li>
+<li><code>text-embedding-ada-002</code>: 支持最多 8192 tokens</li>
+<li><code>BGE-large</code>: 支持 512 tokens</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>如果你的 chunk 超过模型支持的最大 token 数，则会被截断（truncate），导致信息丢失。 </p>
+</blockquote>
+<ol start="2">
+<li><h5 id="LLM-的上下文窗口"><a href="#LLM-的上下文窗口" class="headerlink" title="LLM 的上下文窗口"></a><strong>LLM 的上下文窗口</strong></h5></li>
+</ol>
+<ul>
+<li>LLM（如 GPT-3.5、GPT-4、Llama 等）也有最大上下文长度限制：<ul>
+<li>GPT-3.5-turbo: 4096 tokens</li>
+<li>GPT-4: 8192 或 32768（取决于版本）</li>
+<li>Llama2-70b: 4096 tokens</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>所以在 RAG 中，如果要将多个 chunks 拼接到 prompt 中，总 token 数不能超过这个限制。 </p>
+</blockquote>
+<hr>
+<h4 id="🧠-建议设置："><a href="#🧠-建议设置：" class="headerlink" title="🧠 建议设置："></a>🧠 建议设置：</h4><table>
+<thead>
+<tr>
+<th>Embedding Model</th>
+<th>Max Chunk Size</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>all-MiniLM-L6-v2</td>
+<td>256</td>
+</tr>
+<tr>
+<td>BERT-base</td>
+<td>512</td>
+</tr>
+<tr>
+<td>BGE-M3</td>
+<td>8192</td>
+</tr>
+<tr>
+<td>text-embedding-ada-002</td>
+<td>8192</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>实际使用时建议预留一些 buffer，比如设置为模型最大长度的 80%。 </p>
+</blockquote>
+<hr>
+<h3 id="🔁-二、overlap：重叠（Overlap）"><a href="#🔁-二、overlap：重叠（Overlap）" class="headerlink" title="🔁 二、overlap：重叠（Overlap）"></a>🔁 二、<code>overlap</code>：重叠（Overlap）</h3><h4 id="✅-定义：-1"><a href="#✅-定义：-1" class="headerlink" title="✅ 定义："></a>✅ 定义：</h4><ul>
+<li><code>overlap</code> 表示相邻两个 chunk 之间的重叠 token 数量。</li>
+<li>目的是为了防止在切分时“切断”语义连贯的内容，保留上下文信息。</li>
+</ul>
+<hr>
+<h4 id="🧊-工作方式（图示）："><a href="#🧊-工作方式（图示）：" class="headerlink" title="🧊 工作方式（图示）："></a>🧊 工作方式（图示）：</h4><p>原始文本 token 流：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[ t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12 ]</span><br><span class="line"></span><br><span class="line">chunksize = 5</span><br><span class="line"></span><br><span class="line">overlap = 2</span><br><span class="line"></span><br><span class="line">Chunks:</span><br><span class="line"></span><br><span class="line">Chunk1: [t1, t2, t3, t4, t5]</span><br><span class="line"></span><br><span class="line">Chunk2:       [t4, t5, t6, t7, t8]</span><br><span class="line"></span><br><span class="line">Chunk3:             [t7, t8, t9, t10, t11]</span><br><span class="line"></span><br><span class="line">Chunk4:                   [t10, t11, t12]</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h4 id="🎯-使用目的："><a href="#🎯-使用目的：" class="headerlink" title="🎯 使用目的："></a>🎯 使用目的：</h4><ol>
+<li><strong>缓解语义断裂</strong> ：避免一个完整句子&#x2F;段落被切成两半。</li>
+<li><strong>提升召回率</strong> ：在检索时，即使关键词出现在两个 chunk 的交界处，也能保证至少在一个 chunk 中出现完整的上下文。</li>
+<li><strong>鲁棒性增强</strong> ：在问答系统中，有助于模型理解跨 chunk 的上下文。</li>
+</ol>
+<hr>
+<h4 id="⚖️-设置建议："><a href="#⚖️-设置建议：" class="headerlink" title="⚖️ 设置建议："></a>⚖️ 设置建议：</h4><table>
+<thead>
+<tr>
+<th>chunksize</th>
+<th>overlap (建议值)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>512</td>
+<td>64 ~ 128</td>
+</tr>
+<tr>
+<td>1024</td>
+<td>128 ~ 256</td>
+</tr>
+<tr>
+<td>2048</td>
+<td>256 ~ 512</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>一般设置为 chunksize 的 10%~20% 即可。 </p>
+</blockquote>
+<hr>
+<h3 id="📊-三、chunksize-vs-overlap-对比表"><a href="#📊-三、chunksize-vs-overlap-对比表" class="headerlink" title="📊 三、chunksize vs overlap 对比表"></a>📊 三、chunksize vs overlap 对比表</h3><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+<th>影响</th>
+<th>推荐范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>chunksize</td>
+<td>每个 chunk 的最大 token 数</td>
+<td>控制信息密度、影响 embedding 效果、受限于模型长度</td>
+<td>128 ~ 2048</td>
+</tr>
+<tr>
+<td>overlap</td>
+<td>相邻 chunk 之间的重叠 token 数</td>
+<td>防止语义断裂、提高检索召回率</td>
+<td>chunksize 的 10%~20%</td>
+</tr>
+</tbody></table>
+<h2 id="文本切分策略"><a href="#文本切分策略" class="headerlink" title="文本切分策略"></a>文本切分策略</h2><h3 id="🧠-一、不同文本切分策略概览"><a href="#🧠-一、不同文本切分策略概览" class="headerlink" title="🧠 一、不同文本切分策略概览"></a>🧠 一、不同文本切分策略概览</h3><table>
+<thead>
+<tr>
+<th>策略</th>
+<th>中文名称</th>
+<th>特点</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Character TextSplitter</td>
+<td>字符级切分器</td>
+<td>按字符数固定长度切分</td>
+<td>快速简单，适合格式不敏感的处理</td>
+</tr>
+<tr>
+<td>RecursiveCharacter TextSplitter</td>
+<td>递归字符切分器</td>
+<td>按指定标点优先切分，避免断句</td>
+<td>更智能的固定长度切分</td>
+</tr>
+<tr>
+<td>Document Specific Splitting</td>
+<td>文档专用切分</td>
+<td>按文档结构（如标题、段落）切分</td>
+<td>PDF、Markdown、Word 等结构化文档</td>
+</tr>
+<tr>
+<td>Semantic Splitting</td>
+<td>语义切分</td>
+<td>按语义连贯性切分</td>
+<td>高质量语义理解任务（摘要、问答等）</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="🛠️-二、逐个详解-实现方式"><a href="#🛠️-二、逐个详解-实现方式" class="headerlink" title="🛠️ 二、逐个详解 + 实现方式"></a>🛠️ 二、逐个详解 + 实现方式</h3><hr>
+<h4 id="1-Character-TextSplitter（字符级切分器）"><a href="#1-Character-TextSplitter（字符级切分器）" class="headerlink" title="1. Character TextSplitter（字符级切分器）"></a>1. <strong>Character TextSplitter（字符级切分器）</strong></h4><h5 id="✅-实现原理："><a href="#✅-实现原理：" class="headerlink" title="✅ 实现原理："></a>✅ 实现原理：</h5><ul>
+<li>将文本按固定字符数切分。</li>
+<li>不考虑句子边界或语义。</li>
+</ul>
+<h5 id="🔧-示例代码："><a href="#🔧-示例代码：" class="headerlink" title="🔧 示例代码："></a>🔧 示例代码：</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="⚠️-缺点："><a href="#⚠️-缺点：" class="headerlink" title="⚠️ 缺点："></a>⚠️ 缺点：</h5><ul>
+<li>容易打断句子，导致语义断裂。</li>
+<li>对中文支持较差（一个词可能被拆成两个字）。</li>
+</ul>
+<hr>
+<h4 id="2-RecursiveCharacter-TextSplitter（递归字符切分器）"><a href="#2-RecursiveCharacter-TextSplitter（递归字符切分器）" class="headerlink" title="2. RecursiveCharacter TextSplitter（递归字符切分器）"></a>2. <strong>RecursiveCharacter TextSplitter（递归字符切分器）</strong></h4><h5 id="✅-实现原理：-1"><a href="#✅-实现原理：-1" class="headerlink" title="✅ 实现原理："></a>✅ 实现原理：</h5><ul>
+<li>按照一组“分割符”进行优先尝试切分（如 <code>[&quot;\n\n&quot;, &quot;\n&quot;, &quot;。&quot;, &quot;.&quot;, &quot; &quot;]</code>）。</li>
+<li>如果找不到合适的分割符，则回退到字符切分。</li>
+</ul>
+<h5 id="🔧-示例流程："><a href="#🔧-示例流程：" class="headerlink" title="🔧 示例流程："></a>🔧 示例流程：</h5><ol>
+<li>先尝试用 <code>\n\n</code> 切分（段落级）</li>
+<li>若不行，用 <code>\n</code>（换行）</li>
+<li>再不行，用 <code>。</code> 或 <code>.</code>（句号）</li>
+<li>最后用空格、字符切分</li>
+</ol>
+<h5 id="⚠️-优点："><a href="#⚠️-优点：" class="headerlink" title="⚠️ 优点："></a>⚠️ 优点：</h5><ul>
+<li>避免在句子中间切断。</li>
+<li>保持语义完整性优于字符切分。</li>
+</ul>
+<h5 id="📦-代码示例："><a href="#📦-代码示例：" class="headerlink" title="📦 代码示例："></a>📦 代码示例：</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h4 id="3-Document-Specific-Splitting（文档专用切分）"><a href="#3-Document-Specific-Splitting（文档专用切分）" class="headerlink" title="3. Document Specific Splitting（文档专用切分）"></a>3. <strong>Document Specific Splitting（文档专用切分）</strong></h4><h5 id="✅-实现原理：-2"><a href="#✅-实现原理：-2" class="headerlink" title="✅ 实现原理："></a>✅ 实现原理：</h5><ul>
+<li>根据文档类型（PDF、Markdown、HTML、Word）提取结构信息。</li>
+<li>按照标题、段落、列表等结构进行切分。</li>
+</ul>
+<h5 id="🔧-示例流程：-1"><a href="#🔧-示例流程：-1" class="headerlink" title="🔧 示例流程："></a>🔧 示例流程：</h5><ol>
+<li>使用 OCR 或解析器读取 PDF&#x2F;HTML。</li>
+<li>提取标题层级（如 H1, H2）、段落标签。</li>
+<li>每个章节或子标题作为一个 Chunk。</li>
+</ol>
+<h5 id="📦-代码示例：-1"><a href="#📦-代码示例：-1" class="headerlink" title="📦 代码示例："></a>📦 代码示例：</h5><ul>
+<li>PDF：<code>pdfplumber</code>, <code>PyPDF2</code></li>
+<li>Markdown：<code>markdownify</code>, <code>mistune</code></li>
+<li>HTML：<code>BeautifulSoup</code></li>
+</ul>
+<h5 id="⚠️-优点：-1"><a href="#⚠️-优点：-1" class="headerlink" title="⚠️ 优点："></a>⚠️ 优点：</h5><ul>
+<li>结构清晰，适合知识库构建。</li>
+<li>保留逻辑层次。</li>
+</ul>
+<hr>
+<h4 id="4-Semantic-Splitting（语义切分）-滑动窗口法"><a href="#4-Semantic-Splitting（语义切分）-滑动窗口法" class="headerlink" title="4. Semantic Splitting（语义切分） - 滑动窗口法"></a>4. <strong>Semantic Splitting（语义切分） - 滑动窗口法</strong></h4><h5 id="✅-实现原理：-3"><a href="#✅-实现原理：-3" class="headerlink" title="✅ 实现原理："></a>✅ 实现原理：</h5><ul>
+<li>按句子初步切分。</li>
+<li>使用滑动窗口遍历句子组合。</li>
+<li>通过语义模型判断是否应合并为一个语义单元。</li>
+</ul>
+<h5 id="🧩-步骤详解（以你提供的六个语义单元为例）"><a href="#🧩-步骤详解（以你提供的六个语义单元为例）" class="headerlink" title="🧩 步骤详解（以你提供的六个语义单元为例）"></a>🧩 步骤详解（以你提供的六个语义单元为例）</h5><h6 id="Step-1-预处理-→-句子切分"><a href="#Step-1-预处理-→-句子切分" class="headerlink" title="Step 1: 预处理 → 句子切分"></a>Step 1: 预处理 → 句子切分</h6><h6 id="Step-2-构建滑动窗口（窗口大小-2，步长-1）"><a href="#Step-2-构建滑动窗口（窗口大小-2，步长-1）" class="headerlink" title="Step 2: 构建滑动窗口（窗口大小&#x3D;2，步长&#x3D;1）"></a>Step 2: 构建滑动窗口（窗口大小&#x3D;2，步长&#x3D;1）</h6><h6 id="Step-3-语义分析（使用-BERT-计算相似度）"><a href="#Step-3-语义分析（使用-BERT-计算相似度）" class="headerlink" title="Step 3: 语义分析（使用 BERT 计算相似度）"></a>Step 3: 语义分析（使用 BERT 计算相似度）</h6><h6 id="Step-4-输出结果（语义单元）"><a href="#Step-4-输出结果（语义单元）" class="headerlink" title="Step 4: 输出结果（语义单元）"></a>Step 4: 输出结果（语义单元）</h6><hr>
+<h3 id="🧪-三、总结对比表"><a href="#🧪-三、总结对比表" class="headerlink" title="🧪 三、总结对比表"></a>🧪 三、总结对比表</h3><table>
+<thead>
+<tr>
+<th>策略</th>
+<th>是否保留语义</th>
+<th>是否保留结构</th>
+<th>速度</th>
+<th>精度</th>
+<th>应用建议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Character</td>
+<td>❌ 否</td>
+<td>❌ 否</td>
+<td>⏱️ 快</td>
+<td>⬇️ 低</td>
+<td>快速预处理</td>
+</tr>
+<tr>
+<td>RecursiveCharacter</td>
+<td>✅ 是</td>
+<td>❌ 否</td>
+<td>⏱️ 较快</td>
+<td>⬆️ 中</td>
+<td>通用文本处理</td>
+</tr>
+<tr>
+<td>Document Specific</td>
+<td>✅ 是</td>
+<td>✅ 是</td>
+<td>⏳ 慢</td>
+<td>⬆️ 中高</td>
+<td>结构化文档处理</td>
+</tr>
+<tr>
+<td>Semantic Splitting</td>
+<td>✅ 是</td>
+<td>❌ 否</td>
+<td>⏳ 很慢</td>
+<td>⬆⬆ 高</td>
+<td>高质量语义任务</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="📝-四、如何选择？"><a href="#📝-四、如何选择？" class="headerlink" title="📝 四、如何选择？"></a>📝 四、如何选择？</h3><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>推荐策略</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>快速索引构建</td>
+<td>RecursiveCharacter</td>
+</tr>
+<tr>
+<td>PDF&#x2F;Word 文档处理</td>
+<td>Document Specific</td>
+</tr>
+<tr>
+<td>QA &#x2F; Summarization &#x2F; RAG</td>
+<td>Semantic Splitting</td>
+</tr>
+<tr>
+<td>简单粗暴处理</td>
+<td>Character</td>
+</tr>
+</tbody></table>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">lwm</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/posts/d690a2ae.html">http://example.com/posts/d690a2ae.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">欢迎来到lwm的小站</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/agent/">agent</a></div><div class="post-share"><div class="social-share" data-image="/img/icon.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/1a843872.html" title="权限鉴定"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">权限鉴定</div></div><div class="info-2"><div class="info-item-1">访问控制访问控制模型RBAC（Role-Based Access Control，基于角色的访问控制）定义RBAC 是一种通过角色来管理用户权限的模型。用户被分配到不同的角色，而每个角色又被赋予特定的权限。用户通过角色间接获得对资源的访问权限。 核心概念 用户（User） ：系统中的个体，例如管理员、普通用户等。 角色（Role） ：一组权限的集合，例如“管理员”、“编辑者”、“访客”。 权限（Permission） ：对某个资源的具体操作权限，例如“读取文件”、“删除文件”。 资源（Resource） ：系统中的受保护对象，例如文件、数据库记录等。  工作原理 用户与角色关联 ：用户被分配一个或多个角色。 角色与权限关联 ：角色被赋予一组权限。 权限生效 ：用户通过其角色获得对应的权限。  优点 简单易用 ：权限管理直观，易于理解和实现。 灵活性适中 ：适合中小规模系统，尤其是权限需求相对固定的场景。 集中管理 ：通过角色集中管理权限，方便调整。  缺点 灵活性不足 ：如果需要为某些用户单独设置特殊权限，可能需要创建新的角色，导致角色数量膨胀。 难以表达复杂逻辑...</div></div></div></a><a class="pagination-related" href="/posts/bea14ee2.html" title="浏览器插件开发"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">浏览器插件开发</div></div><div class="info-2"><div class="info-item-1">🧾 Chrome 扩展 manifest.json 配置详解Chrome 浏览器扩展的配置文件是 manifest.json，它是每个扩展的核心配置文件，决定了扩展的基本信息、权限、功能等。 下面是对常见字段的详细解释：  🔧 基础配置manifest_version 类型 : 整数 示例值 : 3 作用 : 指定使用的 Manifest 版本。目前推荐使用版本 3（Manifest V3）。 注意 : V3 和 V2 有较大差异，如后台脚本改为 Service Worker，不再支持某些注入方式。   name 类型 : 字符串 示例值 : &quot;My First Extension&quot; 作用 : 插件名称，显示在浏览器插件管理页面和工具栏中。   version 类型 : 字符串 示例值 : &quot;1.0&quot; 或 &quot;1.0.1&quot; 作用 : 插件版本号，用于更新检测和用户识别。 建议 : 使用语义化版本号（Semantic Versioning）。   description 类型 : 字符串 示例值 :...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/de252c3b.html" title="eino 学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-04-06</div><div class="info-item-2">eino 学习</div></div><div class="info-2"><div class="info-item-1">Enio知识库组件（使用 redisearch 数据库）document.Loader （文本载入接口）接口定义 123type Loader interface &#123;    Load(ctx context.Context, src Source, opts ...LoaderOption) ([]*schema.Document, error)&#125;  功能：负责文本的载入，加载成Document 格式 123456789101112131415type Document struct &#123;    // ID 是文档的唯一标识符。    // 通常是一个字符串，例如 UUID 或其他唯一值，用于区分不同的文档。    ID string `json:&quot;id&quot;`    // Content 是文档的内容。    // 通常是纯文本，但也可以是 Markdown、HTML 等格式的文本。    // 该字段存储需要处理或展示的文本内容。    Content string `json:&quot;content&quot;`    //...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/icon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">lwm</div><div class="author-info-description">人生有多少个十年</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/lwm-galactic"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%91%E9%87%8F%E5%8C%96%E5%89%8D%E6%96%87%E6%9C%AC%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">向量化前文本预处理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%AF%B9%E6%96%87%E6%9C%AC%E8%BF%9B%E8%A1%8C%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-number">1.1.</span> <span class="toc-text">为什么要对文本进行预处理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%AF%B9%E6%96%87%E6%9C%AC%E8%BF%9B%E8%A1%8C%E9%A2%84%E5%A4%84%E7%90%86%EF%BC%9F%E6%A0%B8%E5%BF%83%E5%8E%9F%E5%9B%A0%E5%A6%82%E4%B8%8B%EF%BC%9A"><span class="toc-number">1.1.1.</span> <span class="toc-text">✅ 一、为什么要对文本进行预处理？核心原因如下：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E5%8E%BB%E9%99%A4%E5%99%AA%E5%A3%B0%EF%BC%8C%E6%8F%90%E9%AB%98%E8%AF%AD%E4%B9%89%E5%87%86%E7%A1%AE%E6%80%A7"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">1. 去除噪声，提高语义准确性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E7%BB%9F%E4%B8%80%E6%A0%BC%E5%BC%8F%EF%BC%8C%E6%8F%90%E5%8D%87%E4%B8%80%E8%87%B4%E6%80%A7"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">2. 统一格式，提升一致性</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%A7%BC-%E4%BA%8C%E3%80%81%E5%B8%B8%E8%A7%81%E7%9A%84%E6%96%87%E6%9C%AC%E9%A2%84%E5%A4%84%E7%90%86%E6%AD%A5%E9%AA%A4"><span class="toc-number">1.1.2.</span> <span class="toc-text">🧼 二、常见的文本预处理步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%93%88-%E4%B8%89%E3%80%81%E9%A2%84%E5%A4%84%E7%90%86%E5%AF%B9%E4%B8%8B%E6%B8%B8%E4%BB%BB%E5%8A%A1%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="toc-number">1.1.3.</span> <span class="toc-text">📈 三、预处理对下游任务的影响</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E6%80%BB%E7%BB%93%E4%B8%80%E5%8F%A5%E8%AF%9D%EF%BC%9A"><span class="toc-number">1.1.4.</span> <span class="toc-text">✅ 总结一句话：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86%E7%9A%84%E4%B8%A4%E4%B8%AA%E9%87%8D%E8%A6%81%E6%A6%82%E5%BF%B5"><span class="toc-number">1.2.</span> <span class="toc-text">文本处理的两个重要概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%A7%A9-%E4%B8%80%E3%80%81chunksize%EF%BC%9A%E5%9D%97%E5%A4%A7%E5%B0%8F%EF%BC%88Chunk-Size%EF%BC%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">🧩 一、chunksize：块大小（Chunk Size）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%9C%85-%E5%AE%9A%E4%B9%89%EF%BC%9A"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">✅ 定义：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%94%92-%E9%99%90%E5%88%B6%E5%9B%A0%E7%B4%A0%EF%BC%9A"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">🔒 限制因素：</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Embedding-%E6%A8%A1%E5%9E%8B%E6%9C%80%E5%A4%A7%E8%BE%93%E5%85%A5%E9%95%BF%E5%BA%A6"><span class="toc-number">1.2.1.2.1.</span> <span class="toc-text">Embedding 模型最大输入长度</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#LLM-%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AA%97%E5%8F%A3"><span class="toc-number">1.2.1.2.2.</span> <span class="toc-text">LLM 的上下文窗口</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%A7%A0-%E5%BB%BA%E8%AE%AE%E8%AE%BE%E7%BD%AE%EF%BC%9A"><span class="toc-number">1.2.1.3.</span> <span class="toc-text">🧠 建议设置：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%81-%E4%BA%8C%E3%80%81overlap%EF%BC%9A%E9%87%8D%E5%8F%A0%EF%BC%88Overlap%EF%BC%89"><span class="toc-number">1.2.2.</span> <span class="toc-text">🔁 二、overlap：重叠（Overlap）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%9C%85-%E5%AE%9A%E4%B9%89%EF%BC%9A-1"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">✅ 定义：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%A7%8A-%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F%EF%BC%88%E5%9B%BE%E7%A4%BA%EF%BC%89%EF%BC%9A"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">🧊 工作方式（图示）：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%8E%AF-%E4%BD%BF%E7%94%A8%E7%9B%AE%E7%9A%84%EF%BC%9A"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">🎯 使用目的：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%9A%96%EF%B8%8F-%E8%AE%BE%E7%BD%AE%E5%BB%BA%E8%AE%AE%EF%BC%9A"><span class="toc-number">1.2.2.4.</span> <span class="toc-text">⚖️ 设置建议：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%93%8A-%E4%B8%89%E3%80%81chunksize-vs-overlap-%E5%AF%B9%E6%AF%94%E8%A1%A8"><span class="toc-number">1.2.3.</span> <span class="toc-text">📊 三、chunksize vs overlap 对比表</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E6%9C%AC%E5%88%87%E5%88%86%E7%AD%96%E7%95%A5"><span class="toc-number">1.3.</span> <span class="toc-text">文本切分策略</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%A7%A0-%E4%B8%80%E3%80%81%E4%B8%8D%E5%90%8C%E6%96%87%E6%9C%AC%E5%88%87%E5%88%86%E7%AD%96%E7%95%A5%E6%A6%82%E8%A7%88"><span class="toc-number">1.3.1.</span> <span class="toc-text">🧠 一、不同文本切分策略概览</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%9B%A0%EF%B8%8F-%E4%BA%8C%E3%80%81%E9%80%90%E4%B8%AA%E8%AF%A6%E8%A7%A3-%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="toc-number">1.3.2.</span> <span class="toc-text">🛠️ 二、逐个详解 + 实现方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-Character-TextSplitter%EF%BC%88%E5%AD%97%E7%AC%A6%E7%BA%A7%E5%88%87%E5%88%86%E5%99%A8%EF%BC%89"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">1. Character TextSplitter（字符级切分器）</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E2%9C%85-%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%EF%BC%9A"><span class="toc-number">1.3.2.1.1.</span> <span class="toc-text">✅ 实现原理：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%F0%9F%94%A7-%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81%EF%BC%9A"><span class="toc-number">1.3.2.1.2.</span> <span class="toc-text">🔧 示例代码：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E2%9A%A0%EF%B8%8F-%E7%BC%BA%E7%82%B9%EF%BC%9A"><span class="toc-number">1.3.2.1.3.</span> <span class="toc-text">⚠️ 缺点：</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-RecursiveCharacter-TextSplitter%EF%BC%88%E9%80%92%E5%BD%92%E5%AD%97%E7%AC%A6%E5%88%87%E5%88%86%E5%99%A8%EF%BC%89"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">2. RecursiveCharacter TextSplitter（递归字符切分器）</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E2%9C%85-%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%EF%BC%9A-1"><span class="toc-number">1.3.2.2.1.</span> <span class="toc-text">✅ 实现原理：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%F0%9F%94%A7-%E7%A4%BA%E4%BE%8B%E6%B5%81%E7%A8%8B%EF%BC%9A"><span class="toc-number">1.3.2.2.2.</span> <span class="toc-text">🔧 示例流程：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E2%9A%A0%EF%B8%8F-%E4%BC%98%E7%82%B9%EF%BC%9A"><span class="toc-number">1.3.2.2.3.</span> <span class="toc-text">⚠️ 优点：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%F0%9F%93%A6-%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B%EF%BC%9A"><span class="toc-number">1.3.2.2.4.</span> <span class="toc-text">📦 代码示例：</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-Document-Specific-Splitting%EF%BC%88%E6%96%87%E6%A1%A3%E4%B8%93%E7%94%A8%E5%88%87%E5%88%86%EF%BC%89"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">3. Document Specific Splitting（文档专用切分）</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E2%9C%85-%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%EF%BC%9A-2"><span class="toc-number">1.3.2.3.1.</span> <span class="toc-text">✅ 实现原理：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%F0%9F%94%A7-%E7%A4%BA%E4%BE%8B%E6%B5%81%E7%A8%8B%EF%BC%9A-1"><span class="toc-number">1.3.2.3.2.</span> <span class="toc-text">🔧 示例流程：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%F0%9F%93%A6-%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B%EF%BC%9A-1"><span class="toc-number">1.3.2.3.3.</span> <span class="toc-text">📦 代码示例：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E2%9A%A0%EF%B8%8F-%E4%BC%98%E7%82%B9%EF%BC%9A-1"><span class="toc-number">1.3.2.3.4.</span> <span class="toc-text">⚠️ 优点：</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-Semantic-Splitting%EF%BC%88%E8%AF%AD%E4%B9%89%E5%88%87%E5%88%86%EF%BC%89-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%B3%95"><span class="toc-number">1.3.2.4.</span> <span class="toc-text">4. Semantic Splitting（语义切分） - 滑动窗口法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E2%9C%85-%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%EF%BC%9A-3"><span class="toc-number">1.3.2.4.1.</span> <span class="toc-text">✅ 实现原理：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%F0%9F%A7%A9-%E6%AD%A5%E9%AA%A4%E8%AF%A6%E8%A7%A3%EF%BC%88%E4%BB%A5%E4%BD%A0%E6%8F%90%E4%BE%9B%E7%9A%84%E5%85%AD%E4%B8%AA%E8%AF%AD%E4%B9%89%E5%8D%95%E5%85%83%E4%B8%BA%E4%BE%8B%EF%BC%89"><span class="toc-number">1.3.2.4.2.</span> <span class="toc-text">🧩 步骤详解（以你提供的六个语义单元为例）</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#Step-1-%E9%A2%84%E5%A4%84%E7%90%86-%E2%86%92-%E5%8F%A5%E5%AD%90%E5%88%87%E5%88%86"><span class="toc-number">1.3.2.4.2.1.</span> <span class="toc-text">Step 1: 预处理 → 句子切分</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#Step-2-%E6%9E%84%E5%BB%BA%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%EF%BC%88%E7%AA%97%E5%8F%A3%E5%A4%A7%E5%B0%8F-2%EF%BC%8C%E6%AD%A5%E9%95%BF-1%EF%BC%89"><span class="toc-number">1.3.2.4.2.2.</span> <span class="toc-text">Step 2: 构建滑动窗口（窗口大小&#x3D;2，步长&#x3D;1）</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#Step-3-%E8%AF%AD%E4%B9%89%E5%88%86%E6%9E%90%EF%BC%88%E4%BD%BF%E7%94%A8-BERT-%E8%AE%A1%E7%AE%97%E7%9B%B8%E4%BC%BC%E5%BA%A6%EF%BC%89"><span class="toc-number">1.3.2.4.2.3.</span> <span class="toc-text">Step 3: 语义分析（使用 BERT 计算相似度）</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#Step-4-%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C%EF%BC%88%E8%AF%AD%E4%B9%89%E5%8D%95%E5%85%83%EF%BC%89"><span class="toc-number">1.3.2.4.2.4.</span> <span class="toc-text">Step 4: 输出结果（语义单元）</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%A7%AA-%E4%B8%89%E3%80%81%E6%80%BB%E7%BB%93%E5%AF%B9%E6%AF%94%E8%A1%A8"><span class="toc-number">1.3.3.</span> <span class="toc-text">🧪 三、总结对比表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%93%9D-%E5%9B%9B%E3%80%81%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%EF%BC%9F"><span class="toc-number">1.3.4.</span> <span class="toc-text">📝 四、如何选择？</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/bea14ee2.html" title="浏览器插件开发">浏览器插件开发</a><time datetime="2025-05-12T14:23:49.000Z" title="发表于 2025-05-12 22:23:49">2025-05-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/d690a2ae.html" title="ai-agent 文本预处理">ai-agent 文本预处理</a><time datetime="2025-05-06T12:56:56.000Z" title="发表于 2025-05-06 20:56:56">2025-05-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1a843872.html" title="权限鉴定">权限鉴定</a><time datetime="2025-04-26T14:30:21.000Z" title="发表于 2025-04-26 22:30:21">2025-04-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/de252c3b.html" title="eino 学习">eino 学习</a><time datetime="2025-04-06T13:53:08.000Z" title="发表于 2025-04-06 21:53:08">2025-04-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/46cde7d0.html" title="redisearch学习">redisearch学习</a><time datetime="2025-04-06T10:46:42.000Z" title="发表于 2025-04-06 18:46:42">2025-04-06</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By lwm</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.3</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script src="/js/pet_icon.js"></script><script src="/js/title.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_footer_beautify_injector_config(){
+    var parent_div_git = document.getElementById('footer-wrap');
+    var item_html = '<p id="ghbdages"><a class="github-badge" target="_blank" href="https://hexo.io/" style="margin-inline:5px" data-title="博客框架为Hexo_v5.4.0" title=""><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&amp;logo=hexo" alt=""/></a><a class="github-badge" target="_blank" href="https://butterfly.js.org/" style="margin-inline:5px" data-title="主题版本Butterfly_v4.2.2" title=""><img src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&amp;logo=bitdefender" alt=""/></a><a class="github-badge" target="_blank" href="https://www.jsdelivr.com/" style="margin-inline:5px" data-title="本站使用JsDelivr为静态资源提供CDN加速" title=""><img src="https://img.shields.io/badge/CDN-jsDelivr-orange?style=flat&amp;logo=jsDelivr" alt=""/></a><a class="github-badge" target="_blank" href="https://github.com/" style="margin-inline:5px" data-title="本站项目由Github托管" title=""><img src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&amp;logo=GitHub" alt=""/></a></p>';
+    console.log('已挂载butterfly_footer_beautify')
+    parent_div_git.insertAdjacentHTML("beforeend",item_html)
+    }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_footer_beautify_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_footer_beautify_injector_config();
+  }
+  </script><div class="js-pjax"><script async="async">var arr = document.getElementsByClassName('recent-post-item');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__zoomIn');
+    arr[i].setAttribute('data-wow-duration', '1.5s');
+    arr[i].setAttribute('data-wow-delay', '200ms');
+    arr[i].setAttribute('data-wow-offset', '30');
+    arr[i].setAttribute('data-wow-iteration', '1');
+  }</script><script async="async">var arr = document.getElementsByClassName('card-widget');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__zoomIn');
+    arr[i].setAttribute('data-wow-duration', '');
+    arr[i].setAttribute('data-wow-delay', '200ms');
+    arr[i].setAttribute('data-wow-offset', '');
+    arr[i].setAttribute('data-wow-iteration', '');
+  }</script><script async="async">var arr = document.getElementsByClassName('flink-list-card');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__flipInY');
+    arr[i].setAttribute('data-wow-duration', '3s');
+    arr[i].setAttribute('data-wow-delay', '');
+    arr[i].setAttribute('data-wow-offset', '');
+    arr[i].setAttribute('data-wow-iteration', '');
+  }</script><script async="async">var arr = document.getElementsByClassName('flink-list-card');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__animated');
+    arr[i].setAttribute('data-wow-duration', '3s');
+    arr[i].setAttribute('data-wow-delay', '');
+    arr[i].setAttribute('data-wow-offset', '');
+    arr[i].setAttribute('data-wow-iteration', '');
+  }</script><script async="async">var arr = document.getElementsByClassName('article-sort-item');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__slideInRight');
+    arr[i].setAttribute('data-wow-duration', '1.5s');
+    arr[i].setAttribute('data-wow-delay', '');
+    arr[i].setAttribute('data-wow-offset', '');
+    arr[i].setAttribute('data-wow-iteration', '');
+  }</script><script async="async">var arr = document.getElementsByClassName('site-card');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__flipInY');
+    arr[i].setAttribute('data-wow-duration', '3s');
+    arr[i].setAttribute('data-wow-delay', '');
+    arr[i].setAttribute('data-wow-offset', '');
+    arr[i].setAttribute('data-wow-iteration', '');
+  }</script><script async="async">var arr = document.getElementsByClassName('site-card');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__animated');
+    arr[i].setAttribute('data-wow-duration', '3s');
+    arr[i].setAttribute('data-wow-delay', '');
+    arr[i].setAttribute('data-wow-offset', '');
+    arr[i].setAttribute('data-wow-iteration', '');
+  }</script></div><script defer src="https://cdn.cbd.int/hexo-butterfly-wowjs/lib/wow.min.js"></script><script defer src="https://cdn.cbd.int/hexo-butterfly-wowjs/lib/wow_init.js"></script><!-- hexo injector body_end end --></body></html>
